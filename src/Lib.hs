@@ -94,3 +94,21 @@ perdedoresDeTodosLosJuegos unasPersonas unosJuegos = filter (noGananNinguno unos
 
 noGananNinguno :: [Juego] -> Persona -> Bool
 noGananNinguno unosJuegos unaPersona = all (not . ganaElJuego unaPersona) unosJuegos
+
+--Punto 6:
+apostar :: Float -> Juego -> Persona -> Persona
+apostar unMonto  unJuego = (aumentarDineroSiGana unJuego unMonto . reducirDinero unMonto)
+
+reducirDinero :: Float -> Persona -> Persona
+reducirDinero unMonto = modificarDinero (subtract unMonto)
+
+modificarDinero :: (Float -> Float) -> Persona -> Persona
+modificarDinero modificacion unJugador = unJugador {dinero = (modificacion . dinero) unJugador}
+
+aumentarDineroSiGana :: Juego -> Float -> Persona -> Persona
+aumentarDineroSiGana unJuego unMontoInicial unJugador
+    | ganaElJuego unJugador unJuego = aumentarDinero (gananciaSegunMontoInicial unJuego unMontoInicial) unJugador
+    | otherwise                     = unJugador
+
+aumentarDinero :: Float -> Persona -> Persona
+aumentarDinero unValor = modificarDinero (+ unValor)
