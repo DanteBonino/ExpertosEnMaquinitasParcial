@@ -24,14 +24,14 @@ valorAmuleto unaPersona
     | tieneAmuleto unaPersona =  (snd . amuleto) unaPersona
     | otherwise               = 1
 
-tieneAmuleto :: Persona -> Bool
-tieneAmuleto = ((not . null). amuleto)
+tieneAmuleto :: Persona -> Bool --Inicialmente las siguientes funciones eran particulares, después en el punto 2 tuve que crear un tienePaciencia y, entonces, las generalicé para cualquier factor
+tieneAmuleto = tieneFactor "amuleto"
 
 amuleto :: Persona -> Factor
-amuleto = (head . filter ((esAmuleto)) . factores)
+amuleto = factor "amuleto"
 
 esAmuleto :: Factor -> Bool
-esAmuleto (nombre, valor) = nombre == "amuleto" && valor > 0 -- Por enunciado se considera que si el valor es 0, entonces no tiene amuleto
+esAmuleto = esFactor "amuleto"
 
 --Version 2 => Acá se calcula 2 veces la suerte, pero se necesita 1 función menos
 suerteTotalV2 :: Persona -> Int
@@ -42,4 +42,32 @@ suerteTotalV2 unaPersona
 valorAmuletoV2 :: Persona -> Int
 valorAmuletoV2 = (snd . amuleto) --No necesitas la guarda como en valorAmuleto xq ya sabes que tiene amuleto. Pero también es verdad que si alguien llama a la función sin que tenga amuleto y rompería
 
+--Punto 2:
+data Juego = Juego{
+    nombreDelJuego            :: String,
+    gananciaSegunMontoInicial :: Float -> Float,
+    criteriosParaGanar        :: [Criterio]
+}
+type Criterio = Persona -> Bool
+
+ruleta :: Juego
+ruleta = Juego "Ruleta" (* 37) [suerteTotalMayorA 80]
+
+suerteTotalMayorA :: Int -> Criterio
+suerteTotalMayorA cotaInferior = ((> cotaInferior) . suerteTotal)
+
+maquinita :: Float -> Juego
+maquinita unJackPot = Juego "Maquinita" (+ unJackPot) [suerteTotalMayorA 95, tienePaciencia]
+
+tienePaciencia :: Criterio
+tienePaciencia = tieneFactor "paciencia"
+
+tieneFactor :: String -> Persona -> Bool
+tieneFactor unFactor = ((not . null) . filter (esFactor unFactor) . factores)
+
+esFactor :: String -> Factor -> Bool
+esFactor unNombre (nombreDelFactor, valorDelFactor) = unNombre == nombreDelFactor && valorDelFactor > 0 
+
+factor :: String -> Persona -> Factor
+factor nombreDeUnFactor = (head . filter ((esFactor nombreDeUnFactor)) . factores)
 
