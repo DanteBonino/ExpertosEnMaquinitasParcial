@@ -77,13 +77,20 @@ ganaElJuego unJugador = (all ($ unJugador) . criteriosParaGanar)
 
 --Punto 4:
 --a
-
+dineroTotal :: Persona -> Float -> [Juego] -> Float
+dineroTotal unaPersona unMontoInicial = (foldl (flip ($)) unMontoInicial . map (gananciaSegunMontoInicial) . filter (ganaElJuego unaPersona)
 --b
 dineroTotalConRecursividad :: Persona -> Float -> [Juego] -> Float
 dineroTotalConRecursividad unaPersona unMontoInicial [] = unMontoInicial
 dineroTotalConRecursividad unaPersona unMontoInicial (unJuego : restoDeJuegos)
     | ganaElJuego unaPersona unJuego = dineroTotalConRecursividad unaPersona (gananciaSegunMontoInicial unJuego unMontoInicial) restoDeJuegos
     | otherwise                      = dineroTotalConRecursividad unaPersona unMontoInicial restoDeJuegos
+
+dineroTotalNico :: Float
+dineroTotalNico = dineroTotal nico 400 [ruleta, maquinita 500]
+
+dineroTotalMaiu :: Float
+dineroTotalMaiu = dineroTotal maiu 400 [ruleta, maquinita 500]
 
 --Punto 5:
 nombresDePerdedores :: [Persona] -> [Juego] -> [String]
