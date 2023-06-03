@@ -83,7 +83,7 @@ dineroTotalConRecursividad :: Persona -> Float -> [Juego] -> Float
 dineroTotalConRecursividad unaPersona unMontoInicial [] = unMontoInicial
 dineroTotalConRecursividad unaPersona unMontoInicial (unJuego : restoDeJuegos)
     | ganaElJuego unaPersona unJuego = dineroTotalConRecursividad unaPersona (gananciaSegunMontoInicial unJuego unMontoInicial) restoDeJuegos
-    | otherwise                             = dineroTotalConRecursividad unaPersona unMontoInicial restoDeJuegos
+    | otherwise                      = dineroTotalConRecursividad unaPersona unMontoInicial restoDeJuegos
 
 --Punto 5:
 nombresDePerdedores :: [Persona] -> [Juego] -> [String]
