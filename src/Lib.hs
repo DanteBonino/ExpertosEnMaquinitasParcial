@@ -75,3 +75,12 @@ factor nombreDeUnFactor = (head . filter ((esFactor nombreDeUnFactor)) . factore
 ganaElJuego :: Persona -> Juego -> Bool
 ganaElJuego unJugador = (all ($ unJugador) . criteriosParaGanar)
 
+--Punto 4:
+--a
+
+--b
+dineroTotalConRecursividad :: Persona -> Float -> [Juego] -> Float
+dineroTotalConRecursividad unaPersona unMontoInicial [] = unMontoInicial
+dineroTotalConRecursividad unaPersona unMontoInicial (unJuego : restoDeJuegos)
+    | ganaElJuego unaPersona unJuego = dineroTotalConRecursividad unaPersona (gananciaSegunMontoInicial unJuego unMontoInicial) restoDeJuegos
+    | otherwise                             = dineroTotalConRecursividad unaPersona unMontoInicial restoDeJuegos
