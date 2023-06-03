@@ -30,9 +30,6 @@ tieneAmuleto = tieneFactor "amuleto"
 amuleto :: Persona -> Factor
 amuleto = factor "amuleto"
 
-esAmuleto :: Factor -> Bool
-esAmuleto = esFactor "amuleto"
-
 --Version 2 => Acá se calcula 2 veces la suerte, pero se necesita 1 función menos
 suerteTotalV2 :: Persona -> Int
 suerteTotalV2 unaPersona
@@ -63,7 +60,7 @@ tienePaciencia :: Criterio
 tienePaciencia = tieneFactor "paciencia"
 
 tieneFactor :: String -> Persona -> Bool
-tieneFactor unFactor = ((not . null) . filter (esFactor unFactor) . factores)
+tieneFactor unFactor = (any (esFactor unFactor) . factores)
 
 esFactor :: String -> Factor -> Bool
 esFactor unNombre (nombreDelFactor, valorDelFactor) = unNombre == nombreDelFactor && valorDelFactor > 0 
@@ -79,6 +76,22 @@ ganaElJuego unJugador = (all ($ unJugador) . criteriosParaGanar)
 --a
 dineroTotal :: Persona -> Float -> [Juego] -> Float
 dineroTotal unaPersona unMontoInicial = (foldl (flip ($)) unMontoInicial . map (gananciaSegunMontoInicial) . filter (ganaElJuego unaPersona)
+--a`
+dineroTotal' unaPersona unMontoInicial = foldl jugarSiPuedeGanar unMontoInicial
+  where jugarSiPuedeGanar unMonto unJuego
+          | ganaElJuego unaPersona unJuego = gananciaSegunMontoInicial unJuego unMonto
+          | otherwise                      = unMonto
+{-
+    La función de a` es lo mismo que hacer esto:
+    dineroTotalV3 :: Foldable t => Persona -> Float -> t Juego -> Float
+    dineroTotalV3 unaPersona unMontoInicial = foldl (jugarSiPuedeGanarV2 unaPersona) unMontoInicial
+
+    jugarSiPuedeGanarV2 :: Persona -> Float -> Juego -> Float
+    jugarSiPuedeGanarV2 unaPersona unMonto unJuego
+        | ganaElJuego unaPersona unJuego = gananciaSegunMontoInicial unJuego unMonto
+        | otherwise                      = unMonto
+    O sea, aplicar parcialmente jugarSiPuedeGanar siempre con la misma Persona y modificar unMonto según si gana o no el juego.
+-}
 --b
 dineroTotalConRecursividad :: Persona -> Float -> [Juego] -> Float
 dineroTotalConRecursividad unaPersona unMontoInicial [] = unMontoInicial
