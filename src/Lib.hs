@@ -84,3 +84,13 @@ dineroTotalConRecursividad unaPersona unMontoInicial [] = unMontoInicial
 dineroTotalConRecursividad unaPersona unMontoInicial (unJuego : restoDeJuegos)
     | ganaElJuego unaPersona unJuego = dineroTotalConRecursividad unaPersona (gananciaSegunMontoInicial unJuego unMontoInicial) restoDeJuegos
     | otherwise                             = dineroTotalConRecursividad unaPersona unMontoInicial restoDeJuegos
+
+--Punto 5:
+nombresDePerdedores :: [Persona] -> [Juego] -> [String]
+nombresDePerdedores unasPersonas  = (map nombre . perdedoresDeTodosLosJuegos unasPersonas)
+
+perdedoresDeTodosLosJuegos :: [Persona] -> [Juego] -> [Persona]
+perdedoresDeTodosLosJuegos unasPersonas unosJuegos = filter (noGananNinguno unosJuegos) unasPersonas
+
+noGananNinguno :: [Juego] -> Persona -> Bool
+noGananNinguno unosJuegos unaPersona = all (not . ganaElJuego unaPersona) unosJuegos
