@@ -71,3 +71,7 @@ esFactor unNombre (nombreDelFactor, valorDelFactor) = unNombre == nombreDelFacto
 factor :: String -> Persona -> Factor
 factor nombreDeUnFactor = (head . filter ((esFactor nombreDeUnFactor)) . factores)
 
+--Punto 3:
+ganaElJuego :: Persona -> Juego -> Bool
+ganaElJuego unJugador = (all ($ unJugador) . criteriosParaGanar)
+
